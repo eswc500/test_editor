@@ -2,53 +2,24 @@
 <html>
 <head>
   <title>Text Editor</title>
-  <style>
-    body {
-      font-family: "Open Sans", sans-serif;
-    }
-
-    h1 {
-      font-size: 24px;
-    }
-
-    .form-label {
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    .mb-3 {
-      margin-bottom: 20px;
-    }
-
-    .btn-primary {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .btn-primary:hover {
-      background-color: #0069d9;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+  <!-- Include Bootstrap CSS file -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
-  <div style="max-width: 500px; margin: 0 auto; padding: 20px;">
-    <h1 style="margin-bottom: 20px;">Text Editor</h1>
+  <h1>Text Editor</h1>
+  <div id="editorTools">
+    <button id="boldBtn">Bold</button>
+    <button id="italicBtn">Italic</button>
+    <button id="underlineBtn">Underline</button>
+  <div class="container mt-5">
+    <h1 class="mb-4">Text Editor</h1>
+    <div class="mb-3">
+      <button id="boldBtn" class="btn btn-primary me-2">Bold</button>
+      <button id="italicBtn" class="btn btn-primary me-2">Italic</button>
+      <button id="underlineBtn" class="btn btn-primary">Underline</button>
+    </div>
     <form id="editorForm">
       <div class="mb-3">
         <label for="title" class="form-label">Title:</label>
@@ -62,37 +33,62 @@
         <label for="image" class="form-label">Image URL:</label>
         <input type="text" id="image" name="image" class="form-control">
       </div>
-      <div class="mb-3">
-        <label class="form-label">Style:</label>
-        <button type="button" onclick="toggleBold()" class="btn-primary">Bold</button>
-        <button type="button" onclick="toggleItalic()" class="btn-primary">Italic</button>
-      </div>
-      <button type="submit" class="btn-primary">Send</button>
+      <button type="submit" class="btn btn-primary">Send</button>
     </form>
   </div>
+  <form id="editorForm">
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title"><br><br>
+    <label for="content">Content:</label><br>
+    <div id="editor" contenteditable="true"></div><br><br>
+    <label for="image">Image URL:</label><br>
+    <input type="text" id="image" name="image"><br><br>
+    <button type="submit">Send</button>
+  </form>
 
   <script>
     // Replace with your Firebase project's configuration
     var firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+  authDomain: "editor-test-4c47e.firebaseapp.com",
+  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+  projectId: "editor-test-4c47e",
+  storageBucket: "editor-test-4c47e.appspot.com",
+  messagingSenderId: "465959812936",
+  appId: "1:465959812936:web:4216ba3ad0af767882bd7d",
+      authDomain: "editor-test-4c47e.firebaseapp.com",
+      databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+      projectId: "editor-test-4c47e",
+      storageBucket: "editor-test-4c47e.appspot.com",
+      messagingSenderId: "465959812936",
+      appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+@ -65,29 +75,7 @@
+      })
+        .then(function() {
+          alert("Data saved successfully!");
+          editorForm.reset(); // Reset form fields
+          editor.innerHTML = ''; // Reset editor content
+        })
+        .catch(function(error) {
+          console.log("Error saving data: " + error);
+        });
+    });
 
-    var database = firebase.database();
-    var editorForm = document.getElementById("editorForm");
-    var editor = document.getElementById("editor");
+    // Add event listeners to editor buttons
+    boldBtn.addEventListener("click", function() {
+      document.execCommand("bold", false, null);
+    });
 
-    // Handle form submission
-    editorForm.addEventListener("submit", function(e) {
-      e.preventDefault(); // Prevent form submission
+    italicBtn.addEventListener("click", function() {
+      document.execCommand("italic", false, null);
+    });
 
-      var title = document.getElementById("title").value;
-      var content = editor.innerHTML
+    underlineBtn.addEventListener("click", function() {
+      document.execCommand("underline", false, null);
+    });
+  </script>
+</body>
+</html>
