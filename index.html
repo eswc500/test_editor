@@ -6,13 +6,21 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
-  <textarea id="editor" rows="10" cols="50"></textarea>
-  <button id="saveBtn">Save</button>
+  <h1>Text Editor</h1>
+  <form id="editorForm">
+    <label for="title">Title:</label><br>
+    <input type="text" id="title" name="title"><br><br>
+    <label for="content">Content:</label><br>
+    <textarea id="content" name="content" rows="10" cols="50"></textarea><br><br>
+    <label for="image">Image:</label><br>
+    <input type="file" id="image" name="image"><br><br>
+    <button type="submit">Send</button>
+  </form>
 
   <script>
     // Replace with your Firebase project's configuration
     var firebaseConfig = {
-     apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
   authDomain: "editor-test-4c47e.firebaseapp.com",
   databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
   projectId: "editor-test-4c47e",
@@ -25,26 +33,32 @@
     firebase.initializeApp(firebaseConfig);
 
     var database = firebase.database();
-    var editor = document.getElementById("editor");
-    var saveBtn = document.getElementById("saveBtn");
+    var editorForm = document.getElementById("editorForm");
 
-    // Save the text content to Firebase database
-    saveBtn.addEventListener("click", function() {
-      var content = editor.value;
-      database.ref("text-editor").set({ content: content })
+    // Handle form submission
+    editorForm.addEventListener("submit", function(e) {
+      e.preventDefault(); // Prevent form submission
+
+      var title = document.getElementById("title").value;
+      var content = document.getElementById("content").value;
+      var image = document.getElementById("image").value;
+
+      // Save the data to Firebase database
+      database.ref("text-editor").push({
+        title: title,
+        content: content,
+        image: image
+      })
         .then(function() {
-          alert("Text saved successfully!");
+          alert("Data saved successfully!");
+          editorForm.reset(); // Reset form fields
         })
         .catch(function(error) {
-          console.log("Error saving text: " + error);
+          console.log("Error saving data: " + error);
         });
-    });
-
-    // Load the text content from Firebase database
-    database.ref("text-editor").on("value", function(snapshot) {
-      var content = snapshot.val().content;
-      editor.value = content;
     });
   </script>
 </body>
 </html>
+
+
