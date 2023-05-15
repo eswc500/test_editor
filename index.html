@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text Editor</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+  <textarea id="editor" rows="10" cols="50"></textarea>
+  <button id="saveBtn">Save</button>
+
+  <script>
+    // Replace with your Firebase project's configuration
+    var firebaseConfig = {
+     apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+  authDomain: "editor-test-4c47e.firebaseapp.com",
+  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+  projectId: "editor-test-4c47e",
+  storageBucket: "editor-test-4c47e.appspot.com",
+  messagingSenderId: "465959812936",
+  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    var database = firebase.database();
+    var editor = document.getElementById("editor");
+    var saveBtn = document.getElementById("saveBtn");
+
+    // Save the text content to Firebase database
+    saveBtn.addEventListener("click", function() {
+      var content = editor.value;
+      database.ref("text-editor").set({ content: content })
+        .then(function() {
+          alert("Text saved successfully!");
+        })
+        .catch(function(error) {
+          console.log("Error saving text: " + error);
+        });
+    });
+
+    // Load the text content from Firebase database
+    database.ref("text-editor").on("value", function(snapshot) {
+      var content = snapshot.val().content;
+      editor.value = content;
+    });
+  </script>
+</body>
+</html>
