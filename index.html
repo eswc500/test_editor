@@ -7,11 +7,16 @@
 </head>
 <body>
   <h1>Text Editor</h1>
+  <div id="editorTools">
+    <button id="boldBtn">Bold</button>
+    <button id="italicBtn">Italic</button>
+    <button id="underlineBtn">Underline</button>
+  </div>
   <form id="editorForm">
     <label for="title">Title:</label><br>
     <input type="text" id="title" name="title"><br><br>
     <label for="content">Content:</label><br>
-    <textarea id="content" name="content" rows="10" cols="50"></textarea><br><br>
+    <div id="editor" contenteditable="true"></div><br><br>
     <label for="image">Image URL:</label><br>
     <input type="text" id="image" name="image"><br><br>
     <button type="submit">Send</button>
@@ -26,7 +31,7 @@
   projectId: "editor-test-4c47e",
   storageBucket: "editor-test-4c47e.appspot.com",
   messagingSenderId: "465959812936",
-  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+  appId: "1:465959812936:web:4216ba3ad0af767882bd7d",
     };
 
     // Initialize Firebase
@@ -34,14 +39,23 @@
 
     var database = firebase.database();
     var editorForm = document.getElementById("editorForm");
+    var boldBtn = document.getElementById("boldBtn");
+    var italicBtn = document.getElementById("italicBtn");
+    var underlineBtn = document.getElementById("underlineBtn");
+    var editor = document.getElementById("editor");
 
     // Handle form submission
     editorForm.addEventListener("submit", function(e) {
       e.preventDefault(); // Prevent form submission
 
       var title = document.getElementById("title").value;
-      var content = document.getElementById("content").value;
+      var content = editor.innerHTML;
       var image = document.getElementById("image").value;
+
+      // Convert content to HTML code with styles
+      var tempDiv = document.createElement("div");
+      tempDiv.innerHTML = content;
+      content = tempDiv.innerHTML;
 
       // Save the data to Firebase database
       database.ref("text-editor").push({
@@ -52,10 +66,24 @@
         .then(function() {
           alert("Data saved successfully!");
           editorForm.reset(); // Reset form fields
+          editor.innerHTML = ''; // Reset editor content
         })
         .catch(function(error) {
           console.log("Error saving data: " + error);
         });
+    });
+
+    // Add event listeners to editor buttons
+    boldBtn.addEventListener("click", function() {
+      document.execCommand("bold", false, null);
+    });
+
+    italicBtn.addEventListener("click", function() {
+      document.execCommand("italic", false, null);
+    });
+
+    underlineBtn.addEventListener("click", function() {
+      document.execCommand("underline", false, null);
     });
   </script>
 </body>
