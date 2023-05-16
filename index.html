@@ -42,19 +42,21 @@
       <label for="title">Title</label>
       <input type="text" id="title" name="title" required>
     </div>
-    <div class="input-field">
-      <label for="content">Content</label>
-      <textarea id="content" name="content" rows="6" required></textarea>
-    </div>
-    <div class="input-field">
-      <label for="imageURL">Image URL</label>
-      <input type="text" id="imageURL" name="imageURL" required>
-    </div>
-    <div class="format-btns">
+	<div class="format-btns">
       <button type="button" onclick="formatBold()">Bold</button>
       <button type="button" onclick="formatItalic()">Italic</button>
       <button type="button" onclick="formatUnderline()">Underline</button>
     </div>
+    <div class="input-field">
+	  <label for="content">Content</label>
+	  <textarea id="content" name="content" rows="6" required></textarea>
+	  <div id="plainTextContent" style="margin-top: 10px;"></div>
+	</div>
+    <div class="input-field">
+      <label for="imageURL">Image URL</label>
+      <input type="text" id="imageURL" name="imageURL" required>
+    </div>
+    
     <button type="submit" class="submit-btn">Save</button>
   </form>
 
@@ -80,33 +82,53 @@
     var database = firebase.database();
 
     // Handle form submission
-    var form = document.getElementById("textEditorForm");
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
+	var form = document.getElementById("textEditorForm");
+	form.addEventListener("submit", function(event) {
+	  event.preventDefault();
 
-      // Get form values
-      var title = document.getElementById("title").value;
-      var content = document.getElementById("content").value;
-      var imageURL = document.getElementById("imageURL").value;
+	  // Get form values
+	  var title = document.getElementById("title").value;
+	  var content = document.getElementById("content").value;
+	  var imageURL = document.getElementById("imageURL").value;
 
-      // Save the data to Firebase
-      database.ref("text_editor").push().set({
-        title: title,
-        content: content,
-       
-	imageURL: imageURL
-	})
-	.then(function() {
-	// Clear form fields
-	form.reset();
-	// Show success message
-	alert("Data saved successfully!");
-	})
-	.catch(function(error) {
-	// Show error message
-	alert("Error occurred while saving data: " + error.message);
+	  // Convert plain text content to HTML
+	  var formattedContent = formatToHTML(content);
+	  // Update plain text content display
+		var contentTextarea = document.getElementById("content");
+		var plainTextContent = document.getElementById("plainTextContent");
+
+		contentTextarea.addEventListener("input", function() {
+		  plainTextContent.innerText = contentTextarea.value;
+		});
+
+	  // Save the data to Firebase
+	  database.ref("text_editor").push().set({
+		title: title,
+		content: formattedContent,
+		imageURL: imageURL
+	  })
+	  .then(function() {
+		// Clear form fields
+		form.reset();
+		// Show success message
+		alert("Data saved successfully!");
+	  })
+	  .catch(function(error) {
+		// Show error message
+		alert("Error occurred while saving data: " + error.message);
+	  });
 	});
-	});
+
+	// Helper function to convert plain text content to HTML
+	function formatToHTML(content) {
+	  var formattedContent = content
+		.replace(/\n/g, "<br>") // Convert line breaks to <br> tags
+		.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Convert **bold** to <b>bold</b>
+		.replace(/\*(.*?)\*/g, "<i>$1</i>") // Convert *italic* to <i>italic</i>
+		.replace(/__(.*?)__/g, "<u>$1</u>"); // Convert __underline__ to <u>underline</u>
+
+	  return formattedContent;
+	}
 
 	// Format content as HTML
 	function formatBold() {
