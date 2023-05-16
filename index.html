@@ -260,11 +260,24 @@ function populateForm(key, data) {
   document.getElementById('title-input').value = data.title;
   document.getElementById('content-input').innerHTML = data.content;
   document.getElementById('image-input').value = data.image;
-  
-  const saveButton = document.querySelector('#blog-editor button[type="button"]');
-  saveButton.onclick = function() {
+
+  const updateButton = document.createElement('button');
+  updateButton.textContent = 'Update';
+  updateButton.addEventListener('click', function() {
     updateEntry(key);
-  };
+  });
+
+  const cancelButton = document.createElement('button');
+  cancelButton.textContent = 'Cancel';
+  cancelButton.addEventListener('click', function() {
+    switchTab('manager-tab');
+  });
+
+  const submitBtnContainer = document.querySelector('.submit-btn');
+  submitBtnContainer.innerHTML = '';
+
+  submitBtnContainer.appendChild(updateButton);
+  submitBtnContainer.appendChild(cancelButton);
 }
 
 function updateEntry(key) {
@@ -297,15 +310,15 @@ function updateEntry(key) {
 
 function deleteEntry(key) {
   const confirmDelete = confirm('Are you sure you want to delete this entry?');
-  
+
   if (confirmDelete) {
-    database.ref('data/' + key).remove().then(function() {
-      switchTab('blog-manager');
-      loadEntries();
-      alert('Entry deleted successfully!');
-    }).catch(function(error) {
-      console.error('Error deleting entry:', error);
-    });
+    database.ref('data/' + key).remove()
+      .then(() => {
+        alert('Entry deleted successfully!');
+        switchTab('manager-tab');
+        location.reload(); // Refresh the page
+      })
+      .catch(error => console.error('Error deleting entry:', error));
   }
 }
 
@@ -360,7 +373,14 @@ function addUnderline() {
 function updateContentDisplay() {
   const contentInput = document.getElementById('content-input');
   const contentDisplay = document.getElementById('content-display');
-contentDisplay.innerHTML = contentInput.innerHTML;
+  contentDisplay.innerHTML = contentInput.innerHTML;
+
+  // Remove strong tag from the content display
+  const strongTags = contentDisplay.getElementsByTagName('strong');
+  for (let i = 0; i < strongTags.length; i++) {
+    const strongTag = strongTags[i];
+    strongTag.outerHTML = strongTag.innerHTML;
+  }
 }
 
 switchTab('blog-editor');
