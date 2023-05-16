@@ -33,9 +33,23 @@
 
     .format-btns button {
       margin-right: 5px;
+      padding: 5px;
+      background-color: #f5f5f5;
+      border: none;
+      cursor: pointer;
     }
-
-    .styled-content {
+    
+    .format-btns button:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .format-btns button img {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+    }
+    
+    .content-display {
       margin-top: 20px;
       border: 1px solid #ccc;
       padding: 10px;
@@ -51,16 +65,17 @@
     </div>
     <div class="input-field">
       <label for="content-input">Content:</label>
-      <textarea id="content-input"></textarea>
+      <div contenteditable="true" id="content-input"></div>
+    </div>
+    <div class="format-btns">
+      <label>Formatting:</label>
+      <button type="button" onclick="addBold()"><img src="bold-icon.png" alt="Bold"></button>
+      <button type="button" onclick="addItalic()"><img src="italic-icon.png" alt="Italic"></button>
+      <button type="button" onclick="addUnderline()"><img src="underline-icon.png" alt="Underline"></button>
     </div>
     <div class="input-field">
       <label for="image-input">Image URL:</label>
       <input type="text" id="image-input">
-    </div>
-    <div class="format-btns">
-      <button type="button" onclick="addBold()">Bold</button>
-      <button type="button" onclick="addItalic()">Italic</button>
-      <button type="button" onclick="addUnderline()">Underline</button>
     </div>
     <div class="submit-btn">
       <button type="button" onclick="saveData()">Save</button>
@@ -68,7 +83,7 @@
     </div>
   </form>
   
-  <div class="styled-content" id="styled-content"></div>
+  <div class="content-display" id="content-display"></div>
   
   <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-database.js"></script>
@@ -89,72 +104,58 @@
     
     function saveData() {
       const title = document.getElementById('title-input').value;
-      const content = document.getElementById('content-input').value;
-      const image = document.getElementById('image-input').value;
-      
-      if (!title || !content || !image) {
-        alert('Please fill in all fields!');
-        return;
-      }
-      
-      const confirmSave = confirm('Are you sure you want to save this data?');
-      
-      if (confirmSave) {
-        const styledContent = document.getElementById('styled-content').innerHTML;
-        const newData = {
-          title: title,
-          content: styledContent,
-          image: image
-        };
-        
-        database.ref('data').push(newData);
-		
-		    clearForm();
+	const content = document.getElementById('content-input').innerHTML;
+	const image = document.getElementById('image-input').value;
+
+  if (!title || !content || !image) {
+    alert('Please fill in all fields!');
+    return;
+  }
+  
+  const confirmSave = confirm('Are you sure you want to save this data?');
+  
+  if (confirmSave) {
+    const newData = {
+      title: title,
+      content: content,
+      image: image
+    };
+    
+    database.ref('data').push(newData);
+    
+    clearForm();
     
     alert('Data saved successfully!');
-	  }
-	}
+  }
+}
 
-	function clearForm() {
-	  document.getElementById('title-input').value = '';
-	  document.getElementById('content-input').value = '';
-	  document.getElementById('image-input').value = '';
-	  document.getElementById('styled-content').innerHTML = '';
-	}
+function clearForm() {
+  document.getElementById('title-input').value = '';
+  document.getElementById('content-input').innerHTML = '';
+  document.getElementById('image-input').value = '';
+  document.getElementById('content-display').innerHTML = '';
+}
 
-	function addBold() {
-	  const contentInput = document.getElementById('content-input');
-	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
-	  const updatedText = '<strong>' + selectedText + '</strong>';
-	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
-	  contentInput.value = newText;
-	  updateStyledContent();
-	}
+function addBold() {
+  document.execCommand('bold', false, null);
+  updateContentDisplay();
+}
 
-	function addItalic() {
-	  const contentInput = document.getElementById('content-input');
-	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
-	  const updatedText = '<em>' + selectedText + '</em>';
-	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
-	  contentInput.value = newText;
-	  updateStyledContent();
-	}
+function addItalic() {
+  document.execCommand('italic', false, null);
+  updateContentDisplay();
+}
 
-	function addUnderline() {
-	  const contentInput = document.getElementById('content-input');
-	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
-	  const updatedText = '<u>' + selectedText + '</u>';
-	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
-	  contentInput.value = newText;
-	  updateStyledContent();
-	}
+function addUnderline() {
+  document.execCommand('underline', false, null);
+  updateContentDisplay();
+}
 
-	function updateStyledContent() {
-	  const contentInput = document.getElementById('content-input');
-	  const styledContent = document.getElementById('styled-content');
-	  styledContent.innerHTML = contentInput.value;
-	}
-
+function updateContentDisplay() {
+  const contentInput = document.getElementById('content-input');
+  const contentDisplay = document.getElementById('content-display');
+  contentDisplay.innerHTML = contentInput.innerHTML;
+}
   </script>
 </body>
 </html>
