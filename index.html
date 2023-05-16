@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <title>My Editor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -33,63 +35,77 @@
       margin-right: 5px;
     }
   </style>
-  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
+</head>
+<body>
+  <h1>My Editor</h1>
+  <form>
+    <div class="input-field">
+      <label for="title-input">Title:</label>
+      <input type="text" id="title-input">
+    </div>
+    <div class="input-field">
+      <label for="content-input">Content:</label>
+      <textarea id="content-input"></textarea>
+    </div>
+    <div class="input-field">
+      <label for="image-input">Image URL:</label>
+      <input type="text" id="image-input">
+    </div>
+    <div class="submit-btn">
+      <button type="button" onclick="saveData()">Save</button>
+      <button type="button" onclick="clearForm()">Clear</button>
+    </div>
+  </form>
+  
+  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-database.js"></script>
   <script>
-    // Initialize Firebase
     const firebaseConfig = {
-      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-	  authDomain: "editor-test-4c47e.firebaseapp.com",
-	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-	  projectId: "editor-test-4c47e",
-	  storageBucket: "editor-test-4c47e.appspot.com",
-	  messagingSenderId: "465959812936",
-	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
-
-    // Reference to the Firebase database
+    
     const database = firebase.database();
-
-    // Function to handle form submission
-    function submitForm(event) {
-      event.preventDefault(); // Prevent form submission
-
-      // Get input values
-      const title = document.getElementById('title').value;
-      const content = document.getElementById('content').value;
-      const imageUrl = document.getElementById('imageUrl').value;
-
-      // Save data to Firebase
-      database.ref('data').push({
-        title: title,
-        content: content,
-        imageUrl: imageUrl
-      });
-
-      // Reset form
-      document.getElementById('title').value = '';
-      document.getElementById('content').value = '';
-      document.getElementById('imageUrl').value = '';
+    
+    function saveData() {
+      const title = document.getElementById('title-input').value;
+      const content = document.getElementById('content-input').value;
+      const image = document.getElementById('image-input').value;
+      
+      if (!title || !content || !image) {
+        alert('Please fill in all fields!');
+        return;
+      }
+      
+      const confirmSave = confirm('Are you sure you want to save this data?');
+      
+      if (confirmSave) {
+        const newData = {
+          title: title,
+          content: content,
+          image: image
+        };
+        
+        database.ref('data').push(newData);
+        
+        clearForm();
+        
+        alert('Data saved successfully!');
+      }
+    }
+    
+    function clearForm() {
+      document.getElementById('title-input').value = '';
+      document.getElementById('content-input').value = '';
+      document.getElementById('image-input').value = '';
     }
   </script>
-</head>
-<body>
-  <form onsubmit="submitForm(event)">
-    <div class="input-field">
-      <label for="title">Title</label>
-      <input type="text" id="title" required>
-    </div>
-    <div class="input-field">
-      <label for="content">Content</label>
-      <textarea id="content" rows="4" required></textarea>
-    </div>
-    <div class="input-field">
-      <label for="imageUrl">Image URL</label>
-      <input type="text" id="imageUrl" required>
-    </div>
-    <button class="submit-btn" type="submit">Submit</button>
-  </form>
 </body>
 </html>
