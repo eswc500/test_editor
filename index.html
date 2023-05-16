@@ -65,14 +65,13 @@
   <script>
     // Initialize Firebase
     var firebaseConfig = {
-      // Your Firebase configuration
-		apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-		authDomain: "editor-test-4c47e.firebaseapp.com",
-		databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-		projectId: "editor-test-4c47e",
-		storageBucket: "editor-test-4c47e.appspot.com",
-		messagingSenderId: "465959812936",
-		appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+      authDomain: "editor-test-4c47e.firebaseapp.com",
+      databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+      projectId: "editor-test-4c47e",
+      storageBucket: "editor-test-4c47e.appspot.com",
+      messagingSenderId: "465959812936",
+      appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -94,30 +93,31 @@
       database.ref("text_editor").push().set({
         title: title,
         content: content,
-        imageURL: imageURL
-      })
-      .then(function() {
-        // Clear form fields
-        form.reset();
-        // Show success message
-        alert("Data saved successfully!");
-      })
-      .catch(function(error) {
-        // Show error message
-        alert("Error occurred while saving data: " + error.message);
-      });
-    });
+       
+	imageURL: imageURL
+	})
+	.then(function() {
+	// Clear form fields
+	form.reset();
+	// Show success message
+	alert("Data saved successfully!");
+	})
+	.catch(function(error) {
+	// Show error message
+	alert("Error occurred while saving data: " + error.message);
+	});
+	});
 
-    // Format content as HTML
-    function formatBold() {
-      var textarea = document.getElementById("content");
-      var start = textarea.selectionStart;
-      var end = textarea.selectionEnd;
-      var selectedText = textarea.value.substring(start, end);
-      var newText = "<b>" + selectedText + "</b>";
-      textarea.value = textarea.value.substring(0,start) + newText + textarea.value.substring(end);
+	// Format content as HTML
+	function formatBold() {
+	  var textarea = document.getElementById("content");
+	  var start = textarea.selectionStart;
+	  var end = textarea.selectionEnd;
+	  var selectedText = textarea.value.substring(start, end);
+	  var newText = "<b>" + selectedText + "</b>";
+	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
 	}
-	
+
 	function formatItalic() {
 	  var textarea = document.getElementById("content");
 	  var start = textarea.selectionStart;
@@ -135,11 +135,8 @@
 	  var newText = "<u>" + selectedText + "</u>";
 	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
 	}
-	
-	  </script>
+
+</script>
 </body>
 </html>
-
-
-
 
