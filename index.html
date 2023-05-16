@@ -2,109 +2,100 @@
 <html>
 <head>
   <title>Text Editor</title>
-  <!-- Include Bootstrap CSS file -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
   <style>
     body {
-      font-family: 'Open Sans', sans-serif;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
-    h1 {
-      text-align: center;
+
+    .input-field {
+      margin-bottom: 10px;
     }
-    #editorTools {
-      text-align: center;
-      margin-bottom: 20px;
+
+    .input-field label {
+      display: block;
+      font-weight: bold;
     }
-    #editorForm {
-      max-width: 500px;
-      margin: 0 auto;
+
+    .input-field input[type="text"],
+    .input-field textarea {
+      width: 100%;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      margin-top: 10px;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
   <h1>Text Editor</h1>
-  <div id="editorTools">
-    <button id="boldBtn" class="btn btn-primary">Bold</button>
-    <button id="italicBtn" class="btn btn-primary">Italic</button>
-    <button id="underlineBtn" class="btn btn-primary">Underline</button>
-  </div>
-  <div class="container mt-5">
-    <h1 class="mb-4">Text Editor</h1>
-    <div class="mb-3">
-      <button id="boldBtn" class="btn btn-primary me-2">Bold</button>
-      <button id="italicBtn" class="btn btn-primary me-2">Italic</button>
-      <button id="underlineBtn" class="btn btn-primary">Underline</button>
+  <form id="textEditorForm">
+    <div class="input-field">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required>
     </div>
-    <form id="editorForm">
-      <div class="mb-3">
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" id="title" name="title" class="form-control">
-      </div>
-      <div class="mb-3">
-        <label for="content" class="form-label">Content:</label>
-        <div id="editor" contenteditable="true" class="form-control"></div>
-      </div>
-      <div class="mb-3">
-        <label for="image" class="form-label">Image URL:</label>
-        <input type="text" id="image" name="image" class="form-control">
-      </div>
-      <button type="submit" class="btn btn-primary">Send</button>
-    </form>
-  </div>
-  <form id="editorForm">
-    <label for="title">Title:</label><br>
-    <input type="text" id="title" name="title"><br><br>
-    <label for="content">Content:</label><br>
-    <div id="editor" contenteditable="true"></div><br><br>
-    <label for="image">Image URL:</label><br>
-    <input type="text" id="image" name="image"><br><br>
-    <button type="submit">Send</button>
+    <div class="input-field">
+      <label for="content">Content</label>
+      <textarea id="content" name="content" rows="6" required></textarea>
+    </div>
+    <div class="input-field">
+      <label for="imageURL">Image URL</label>
+      <input type="text" id="imageURL" name="imageURL" required>
+    </div>
+    <button type="submit" class="submit-btn">Save</button>
   </form>
 
- <script>
-    // Replace with your Firebase project's configuration
+  <!-- Include Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
+
+  <script>
+    // Initialize Firebase
     var firebaseConfig = {
-      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-	  authDomain: "editor-test-4c47e.firebaseapp.com",
-	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-	  projectId: "editor-test-4c47e",
-	  storageBucket: "editor-test-4c47e.appspot.com",
-	  messagingSenderId: "465959812936",
-	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d",
-      authDomain: "editor-test-4c47e.firebaseapp.com",
-      databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-      projectId: "editor-test-4c47e",
-      storageBucket: "editor-test-4c47e.appspot.com",
-      messagingSenderId: "465959812936",
-      appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+      // Your Firebase configuration
+		apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+		authDomain: "editor-test-4c47e.firebaseapp.com",
+			  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+			  projectId: "editor-test-4c47e",
+			  storageBucket: "editor-test-4c47e.appspot.com",
+			  messagingSenderId: "465959812936",
+			  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
-     })
-        .then(function() {
-          alert("Data saved successfully!");
-          editorForm.reset(); // Reset form fields
-          editor.innerHTML = ''; // Reset editor content
-        })
-        .catch(function(error) {
-          console.log("Error saving data: " + error);
-        });
-    });
+    firebase.initializeApp(firebaseConfig);
 
-    // Add event listeners to editor buttons
-    boldBtn.addEventListener("click", function() {
-      document.execCommand("bold", false, null);
-    });
+    // Get a reference to the database
+    var database = firebase.database();
 
-    italicBtn.addEventListener("click", function() {
-      document.execCommand("italic", false, null);
-    });
+    // Handle form submission
+    var form = document.getElementById("textEditorForm");
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
 
-    underlineBtn.addEventListener("click", function() {
-      document.execCommand("underline", false, null);
+      // Get form values
+      var title = document.getElementById("title").value;
+      var content = document.getElementById("content").value;
+      var imageURL = document.getElementById("imageURL").value;
+
+      // Save the data to Firebase
+      database.ref("text_editor").push().set({
+        title: title,
+        content: content,
+        imageURL: imageURL
+      });
+
+      // Clear form fields
+      form.reset();
     });
   </script>
 </body>
 </html>
+
+
+
+
+
