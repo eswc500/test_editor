@@ -93,70 +93,36 @@
 
 	  // Convert plain text content to HTML
 	  var formattedContent = formatToHTML(content);
-	  // Update plain text content display
-		var contentTextarea = document.getElementById("content");
-		var plainTextContent = document.getElementById("plainTextContent");
+	   // Save the data to Firebase
+    database.ref("text_editor").push().set({
+      title: title,
+      content: formattedContent,
+      imageURL: imageURL
+    })
+    .then(function() {
+      // Clear form fields
+      form.reset();
+      // Show success message
+      alert("Data saved successfully!");
+    })
+    .catch(function(error) {
+      // Show error message
+      alert("Error occurred while saving data: " + error.message);
+    });
+  });
 
-		contentTextarea.addEventListener("input", function() {
-		  plainTextContent.innerText = contentTextarea.value;
-		});
+  // Helper function to convert plain text content to HTML
+  function formatToHTML(content) {
+    var formattedContent = content
+      .replace(/\n/g, "<br>") // Convert line breaks to <br> tags
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Convert **bold** to <b>bold</b>
+      .replace(/\*(.*?)\*/g, "<i>$1</i>") // Convert *italic* to <i>italic</i>
+      .replace(/__(.*?)__/g, "<u>$1</u>"); // Convert __underline__ to <u>underline</u>
 
-	  // Save the data to Firebase
-	  database.ref("text_editor").push().set({
-		title: title,
-		content: formattedContent,
-		imageURL: imageURL
-	  })
-	  .then(function() {
-		// Clear form fields
-		form.reset();
-		// Show success message
-		alert("Data saved successfully!");
-	  })
-	  .catch(function(error) {
-		// Show error message
-		alert("Error occurred while saving data: " + error.message);
-	  });
-	});
+    return formattedContent;
+  }
 
-	// Helper function to convert plain text content to HTML
-	function formatToHTML(content) {
-	  var formattedContent = content
-		.replace(/\n/g, "<br>") // Convert line breaks to <br> tags
-		.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Convert **bold** to <b>bold</b>
-		.replace(/\*(.*?)\*/g, "<i>$1</i>") // Convert *italic* to <i>italic</i>
-		.replace(/__(.*?)__/g, "<u>$1</u>"); // Convert __underline__ to <u>underline</u>
-
-	  return formattedContent;
-	}
-
-	// Format content as HTML
-	function formatBold() {
-	  var textarea = document.getElementById("content");
-	  var start = textarea.selectionStart;
-	  var end = textarea.selectionEnd;
-	  var selectedText = textarea.value.substring(start, end);
-	  var newText = "<b>" + selectedText + "</b>";
-	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
-	}
-
-	function formatItalic() {
-	  var textarea = document.getElementById("content");
-	  var start = textarea.selectionStart;
-	  var end = textarea.selectionEnd;
-	  var selectedText = textarea.value.substring(start, end);
-	  var newText = "<i>" + selectedText + "</i>";
-	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
-	}
-
-	function formatUnderline() {
-	  var textarea = document.getElementById("content");
-	  var start = textarea.selectionStart;
-	  var end = textarea.selectionEnd;
-	  var selectedText = textarea.value.substring(start, end);
-	  var newText = "<u>" + selectedText + "</u>";
-	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
-	}
+	
 
 </script>
 </body>
