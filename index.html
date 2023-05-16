@@ -115,7 +115,31 @@
       var end = textarea.selectionEnd;
       var selectedText = textarea.value.substring(start, end);
       var newText = "<b>" + selectedText + "</b>";
-      textarea.value = textarea.value.substring(0,
+      textarea.value = textarea.value.substring(0,start) + newText + textarea.value.substring(end);
+	}
+	
+	function formatItalic() {
+	  var textarea = document.getElementById("content");
+	  var start = textarea.selectionStart;
+	  var end = textarea.selectionEnd;
+	  var selectedText = textarea.value.substring(start, end);
+	  var newText = "<i>" + selectedText + "</i>";
+	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+	}
+
+	function formatUnderline() {
+	  var textarea = document.getElementById("content");
+	  var start = textarea.selectionStart;
+	  var end = textarea.selectionEnd;
+	  var selectedText = textarea.value.substring(start, end);
+	  var newText = "<u>" + selectedText + "</u>";
+	  textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+	}
+	
+	  </script>
+</body>
+</html>
+
 
 
 
