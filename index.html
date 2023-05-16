@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Text Editor</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -34,97 +33,63 @@
       margin-right: 5px;
     }
   </style>
-</head>
-<body>
-  <h1>Text Editor</h1>
-  <form id="textEditorForm">
-    <div class="input-field">
-      <label for="title">Title</label>
-      <input type="text" id="title" name="title" required>
-    </div>
-	<div class="format-btns">
-      <button type="button" onclick="formatBold()">Bold</button>
-      <button type="button" onclick="formatItalic()">Italic</button>
-      <button type="button" onclick="formatUnderline()">Underline</button>
-    </div>
-    <div class="input-field">
-	  <label for="content">Content</label>
-	  <textarea id="content" name="content" rows="6" required></textarea>
-	  <div id="plainTextContent" style="margin-top: 10px;"></div>
-	</div>
-    <div class="input-field">
-      <label for="imageURL">Image URL</label>
-      <input type="text" id="imageURL" name="imageURL" required>
-    </div>
-    
-    <button type="submit" class="submit-btn">Save</button>
-  </form>
-
-  <!-- Include Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js"></script>
-
   <script>
     // Initialize Firebase
-    var firebaseConfig = {
+    const firebaseConfig = {
       apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-      authDomain: "editor-test-4c47e.firebaseapp.com",
-      databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-      projectId: "editor-test-4c47e",
-      storageBucket: "editor-test-4c47e.appspot.com",
-      messagingSenderId: "465959812936",
-      appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+	  authDomain: "editor-test-4c47e.firebaseapp.com",
+	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+	  projectId: "editor-test-4c47e",
+	  storageBucket: "editor-test-4c47e.appspot.com",
+	  messagingSenderId: "465959812936",
+	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
     firebase.initializeApp(firebaseConfig);
 
-    // Get a reference to the database
-    var database = firebase.database();
+    // Reference to the Firebase database
+    const database = firebase.database();
 
-    // Handle form submission
-	var form = document.getElementById("textEditorForm");
-	form.addEventListener("submit", function(event) {
-	  event.preventDefault();
+    // Function to handle form submission
+    function submitForm(event) {
+      event.preventDefault(); // Prevent form submission
 
-	  // Get form values
-	  var title = document.getElementById("title").value;
-	  var content = document.getElementById("content").value;
-	  var imageURL = document.getElementById("imageURL").value;
+      // Get input values
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const imageUrl = document.getElementById('imageUrl').value;
 
-	  // Convert plain text content to HTML
-	  var formattedContent = formatToHTML(content);
-	   // Save the data to Firebase
-    database.ref("text_editor").push().set({
-      title: title,
-      content: formattedContent,
-      imageURL: imageURL
-    })
-    .then(function() {
-      // Clear form fields
-      form.reset();
-      // Show success message
-      alert("Data saved successfully!");
-    })
-    .catch(function(error) {
-      // Show error message
-      alert("Error occurred while saving data: " + error.message);
-    });
-  });
+      // Save data to Firebase
+      database.ref('data').push({
+        title: title,
+        content: content,
+        imageUrl: imageUrl
+      });
 
-  // Helper function to convert plain text content to HTML
-  function formatToHTML(content) {
-    var formattedContent = content
-      .replace(/\n/g, "<br>") // Convert line breaks to <br> tags
-      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Convert **bold** to <b>bold</b>
-      .replace(/\*(.*?)\*/g, "<i>$1</i>") // Convert *italic* to <i>italic</i>
-      .replace(/__(.*?)__/g, "<u>$1</u>"); // Convert __underline__ to <u>underline</u>
-
-    return formattedContent;
-  }
-
-	
-
-</script>
+      // Reset form
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      document.getElementById('imageUrl').value = '';
+    }
+  </script>
+</head>
+<body>
+  <form onsubmit="submitForm(event)">
+    <div class="input-field">
+      <label for="title">Title</label>
+      <input type="text" id="title" required>
+    </div>
+    <div class="input-field">
+      <label for="content">Content</label>
+      <textarea id="content" rows="4" required></textarea>
+    </div>
+    <div class="input-field">
+      <label for="imageUrl">Image URL</label>
+      <input type="text" id="imageUrl" required>
+    </div>
+    <button class="submit-btn" type="submit">Submit</button>
+  </form>
 </body>
 </html>
-
