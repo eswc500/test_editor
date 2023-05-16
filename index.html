@@ -51,6 +51,11 @@
       <label for="image-input">Image URL:</label>
       <input type="text" id="image-input">
     </div>
+    <div class="format-btns">
+      <button type="button" onclick="addBold()">Bold</button>
+      <button type="button" onclick="addItalic()">Italic</button>
+      <button type="button" onclick="addUnderline()">Underline</button>
+    </div>
     <div class="submit-btn">
       <button type="button" onclick="saveData()">Save</button>
       <button type="button" onclick="clearForm()">Clear</button>
@@ -61,13 +66,13 @@
   <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-database.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-	  authDomain: "editor-test-4c47e.firebaseapp.com",
-	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-	  projectId: "editor-test-4c47e",
-	  storageBucket: "editor-test-4c47e.appspot.com",
-	  messagingSenderId: "465959812936",
-	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -89,7 +94,7 @@
       if (confirmSave) {
         const newData = {
           title: title,
-          content: content,
+          content: contentToHtml(content),
           image: image
         };
         
@@ -104,8 +109,47 @@
     function clearForm() {
       document.getElementById('title-input').value = '';
       document.getElementById('content-input').value = '';
-      document.getElementById('image-input').value = '';
-    }
+      document.getElementById('image-input').
+	value = '';
+	}
+	
+		function addBold() {
+	  const contentInput = document.getElementById('content-input');
+	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
+	  const updatedText = '<strong>' + selectedText + '</strong>';
+	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
+	  contentInput.value = newText;
+	}
+
+	function addItalic() {
+	  const contentInput = document.getElementById('content-input');
+	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
+	  const updatedText = '<em>' + selectedText + '</em>';
+	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
+	  contentInput.value = newText;
+	}
+
+	function addUnderline() {
+	  const contentInput = document.getElementById('content-input');
+	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
+	  const updatedText = '<u>' + selectedText + '</u>';
+	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
+	  contentInput.value = newText;
+	}
+
+	function contentToHtml(content) {
+	  const boldRegex = /<strong>(.*?)<\/strong>/g;
+	  const italicRegex = /<em>(.*?)<\/em>/g;
+	  const underlineRegex = /<u>(.*?)<\/u>/g;
+	  
+	  let htmlContent = content;
+	  
+	  htmlContent = htmlContent.replace(boldRegex, '<b>$1</b>');
+	  htmlContent = htmlContent.replace(italicRegex, '<i>$1</i>');
+	  htmlContent = htmlContent.replace(underlineRegex, '<u>$1</u>');
+	  
+	  return htmlContent;
+	}
   </script>
 </body>
 </html>
