@@ -228,13 +228,12 @@
       const buttons = document.createElement('div');
       buttons.classList.add('card-buttons');
       
-      const editButton = document.createElement('
-button');
-editButton.innerText = 'Edit';
-editButton.addEventListener('click', function() {
-switchTab('blog-editor');
-populateForm(key, data);
-});
+      const editButton = document.createElement('button');
+		editButton.innerText = 'Edit';
+		editButton.addEventListener('click', function() {
+		switchTab('blog-editor');
+		populateForm(key, data);
+	});
 
   const deleteButton = document.createElement('button');
   deleteButton.innerText = 'Delete';
