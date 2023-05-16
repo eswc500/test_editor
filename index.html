@@ -34,6 +34,12 @@
     .format-btns button {
       margin-right: 5px;
     }
+
+    .styled-content {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
@@ -62,17 +68,19 @@
     </div>
   </form>
   
+  <div class="styled-content" id="styled-content"></div>
+  
   <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-database.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+	  authDomain: "editor-test-4c47e.firebaseapp.com",
+	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+	  projectId: "editor-test-4c47e",
+	  storageBucket: "editor-test-4c47e.appspot.com",
+	  messagingSenderId: "465959812936",
+	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -92,33 +100,35 @@
       const confirmSave = confirm('Are you sure you want to save this data?');
       
       if (confirmSave) {
+        const styledContent = document.getElementById('styled-content').innerHTML;
         const newData = {
           title: title,
-          content: contentToHtml(content),
+          content: styledContent,
           image: image
         };
         
         database.ref('data').push(newData);
-        
-        clearForm();
-        
-        alert('Data saved successfully!');
-      }
-    }
+		
+		    clearForm();
     
-    function clearForm() {
-      document.getElementById('title-input').value = '';
-      document.getElementById('content-input').value = '';
-      document.getElementById('image-input').
-	value = '';
+    alert('Data saved successfully!');
+	  }
 	}
-	
-		function addBold() {
+
+	function clearForm() {
+	  document.getElementById('title-input').value = '';
+	  document.getElementById('content-input').value = '';
+	  document.getElementById('image-input').value = '';
+	  document.getElementById('styled-content').innerHTML = '';
+	}
+
+	function addBold() {
 	  const contentInput = document.getElementById('content-input');
 	  const selectedText = contentInput.value.substring(contentInput.selectionStart, contentInput.selectionEnd);
 	  const updatedText = '<strong>' + selectedText + '</strong>';
 	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
 	  contentInput.value = newText;
+	  updateStyledContent();
 	}
 
 	function addItalic() {
@@ -127,6 +137,7 @@
 	  const updatedText = '<em>' + selectedText + '</em>';
 	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
 	  contentInput.value = newText;
+	  updateStyledContent();
 	}
 
 	function addUnderline() {
@@ -135,21 +146,15 @@
 	  const updatedText = '<u>' + selectedText + '</u>';
 	  const newText = contentInput.value.substring(0, contentInput.selectionStart) + updatedText + contentInput.value.substring(contentInput.selectionEnd);
 	  contentInput.value = newText;
+	  updateStyledContent();
 	}
 
-	function contentToHtml(content) {
-	  const boldRegex = /<strong>(.*?)<\/strong>/g;
-	  const italicRegex = /<em>(.*?)<\/em>/g;
-	  const underlineRegex = /<u>(.*?)<\/u>/g;
-	  
-	  let htmlContent = content;
-	  
-	  htmlContent = htmlContent.replace(boldRegex, '<b>$1</b>');
-	  htmlContent = htmlContent.replace(italicRegex, '<i>$1</i>');
-	  htmlContent = htmlContent.replace(underlineRegex, '<u>$1</u>');
-	  
-	  return htmlContent;
+	function updateStyledContent() {
+	  const contentInput = document.getElementById('content-input');
+	  const styledContent = document.getElementById('styled-content');
+	  styledContent.innerHTML = contentInput.value;
 	}
+
   </script>
 </body>
 </html>
