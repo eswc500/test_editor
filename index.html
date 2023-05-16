@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html>
 <head>
   <title>Text Editor</title>
@@ -30,6 +29,10 @@
     .submit-btn {
       margin-top: 10px;
     }
+
+    .format-btns button {
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -47,6 +50,11 @@
       <label for="imageURL">Image URL</label>
       <input type="text" id="imageURL" name="imageURL" required>
     </div>
+    <div class="format-btns">
+      <button type="button" onclick="formatBold()">Bold</button>
+      <button type="button" onclick="formatItalic()">Italic</button>
+      <button type="button" onclick="formatUnderline()">Underline</button>
+    </div>
     <button type="submit" class="submit-btn">Save</button>
   </form>
 
@@ -58,6 +66,13 @@
     // Initialize Firebase
     var firebaseConfig = {
       // Your Firebase configuration
+		apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
+		authDomain: "editor-test-4c47e.firebaseapp.com",
+		databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+		projectId: "editor-test-4c47e",
+		storageBucket: "editor-test-4c47e.appspot.com",
+		messagingSenderId: "465959812936",
+		appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -92,11 +107,15 @@
         alert("Error occurred while saving data: " + error.message);
       });
     });
-  </script>
-</body>
-</html>
 
-
+    // Format content as HTML
+    function formatBold() {
+      var textarea = document.getElementById("content");
+      var start = textarea.selectionStart;
+      var end = textarea.selectionEnd;
+      var selectedText = textarea.value.substring(start, end);
+      var newText = "<b>" + selectedText + "</b>";
+      textarea.value = textarea.value.substring(0,
 
 
 
