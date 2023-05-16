@@ -4,15 +4,33 @@
   <title>Text Editor</title>
   <!-- Include Bootstrap CSS file -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    #editorTools {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #editorForm {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
   <h1>Text Editor</h1>
   <div id="editorTools">
-    <button id="boldBtn">Bold</button>
-    <button id="italicBtn">Italic</button>
-    <button id="underlineBtn">Underline</button>
+    <button id="boldBtn" class="btn btn-primary">Bold</button>
+    <button id="italicBtn" class="btn btn-primary">Italic</button>
+    <button id="underlineBtn" class="btn btn-primary">Underline</button>
+  </div>
   <div class="container mt-5">
     <h1 class="mb-4">Text Editor</h1>
     <div class="mb-3">
@@ -46,16 +64,16 @@
     <button type="submit">Send</button>
   </form>
 
-  <script>
+ <script>
     // Replace with your Firebase project's configuration
     var firebaseConfig = {
       apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-  authDomain: "editor-test-4c47e.firebaseapp.com",
-  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-  projectId: "editor-test-4c47e",
-  storageBucket: "editor-test-4c47e.appspot.com",
-  messagingSenderId: "465959812936",
-  appId: "1:465959812936:web:4216ba3ad0af767882bd7d",
+	  authDomain: "editor-test-4c47e.firebaseapp.com",
+	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
+	  projectId: "editor-test-4c47e",
+	  storageBucket: "editor-test-4c47e.appspot.com",
+	  messagingSenderId: "465959812936",
+	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d",
       authDomain: "editor-test-4c47e.firebaseapp.com",
       databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
       projectId: "editor-test-4c47e",
@@ -64,9 +82,7 @@
       appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
     };
 
-    // Initialize Firebase
-@ -65,29 +75,7 @@
-      })
+     })
         .then(function() {
           alert("Data saved successfully!");
           editorForm.reset(); // Reset form fields
