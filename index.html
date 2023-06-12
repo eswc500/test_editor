@@ -2,388 +2,226 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>My Editor</title>
+  <title>Dashboard</title>
   <style>
+    /* Estilos para el dashboard */
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
     }
 
-    .input-field {
-      margin-bottom: 10px;
-    }
-
-    .input-field label {
-      display: block;
-      font-weight: bold;
-    }
-
-    .input-field input[type="text"] {
-      width: 100%;
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      resize: vertical;
-    }
-    
-    .input-field textarea {
-      width: 100%;
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      height: 300px;
-    }
-
-    .submit-btn {
-      margin-top: 10px;
-    }
-
-    .format-btns {
-      margin-bottom: 10px;
-    }
-    
-    .format-btns button {
-      margin-right: 5px;
-      padding: 5px;
-      background-color: #f5f5f5;
-      border: none;
-      cursor: pointer;
-    }
-    
-    .format-btns button:hover {
-      background-color: #e0e0e0;
-    }
-    
-    .format-btns button img {
-      width: 16px;
-      height: 16px;
-      vertical-align: middle;
-    }
-    
-    .content-field {
-      width: 100%;
-      padding: 5px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      height: 300px;
-    }
-    
     .tabs {
       display: flex;
-      justify-content: center;
       margin-bottom: 20px;
     }
-    
+
     .tab {
-      padding: 10px 20px;
-      background-color: #f5f5f5;
-      cursor: pointer;
-    }
-    
-    .tab.active {
-      background-color: #e0e0e0;
-    }
-    
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      flex: 1;
       padding: 10px;
+      background-color: #f2f2f2;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab.active {
+      background-color: #ccc;
+    }
+
+    .content {
+      display: none;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    /* Estilos para el formulario */
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-field {
       margin-bottom: 10px;
     }
-    
-    .card-title {
+
+    .form-field label {
+      display: block;
       font-weight: bold;
       margin-bottom: 5px;
     }
-    
-    .card-date {
-      font-size: 12px;
-      color: #666;
+
+    .form-field input[type="text"],
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 5px;
     }
-    
-    .card-buttons {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 5px;
+
+    .form-field .popup-btn {
+      margin-left: 10px;
     }
-    
-    .card-buttons button {
-      margin-left: 5px;
-      padding: 3px 8px;
-      background-color: #f5f5f5;
-      border: none;
-      cursor: pointer;
+
+    /* Estilos para Update Manager */
+    .update-list {
+      list-style-type: none;
+      padding: 0;
     }
-    
-    .card-buttons button:hover {
-      background-color: #e0e0e0;
-    }
-    
-    #blog-manager {
-      display: none;
+
+    .update-list-item {
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>My Editor</h1>
-  
   <div class="tabs">
-    <div class="tab" onclick="switchTab('blog-editor')">Blog Editor</div>
-    <div class="tab" onclick="switchTab('blog-manager')">Blog Manager</div>
+    <div class="tab active" onclick="changeTab('Formulario')">Formulario</div>
+    <div class="tab" onclick="changeTab('UpdateManager')">Update Manager</div>
   </div>
-  
-  <div id="blog-editor">
-    <form>
-      <div class="input-field">
-        <label for="title-input">Title:</label>
-        <input type="text" id="title-input">
+
+  <div class="content active" id="Formulario">
+    <div class="form-container">
+      <div class="form-field">
+        <label for="createdDate">createdDate:</label>
+        <input type="text" id="createdDate" disabled>
       </div>
-      <div class="input-field">
-        <label for="content-input">Content:</label>
-        <div class="format-btns">
-          <button type="button" onclick="addBold()"><b>B</b></button>
-          <button type="button" onclick="addItalic()"><i>I</i></button>
-          <button type="button" onclick="addUnderline()"><u>U</u></button>
-        </div>
-        <div id="content-input" class="content-field" contenteditable="true"></div>
+
+      <div class="form-field">
+        <label for="endDate">endDate:</label>
+        <input type="text" id="endDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('endDate')">Generar fecha</button>
       </div>
-      <div class="input-field">
-        <label for="image-input">Image URL:</label>
-        <input type="text" id="image-input">
+
+      <div class="form-field">
+        <label for="id">id:</label>
+        <input type="number" id="id">
       </div>
-      <div class="submit-btn">
-        <button type="button" onclick="saveData()">Save</button>
-        <button type="button" onclick="clearForm()">Clear</button>
+
+      <div class="form-field">
+        <label for="lastModifiedDate">lastModifiedDate:</label>
+        <input type="text" id="lastModifiedDate" disabled>
       </div>
-    </form>
+
+      <div class="form-field">
+        <label for="newVersion">newVersion:</label>
+        <input type="text" id="newVersion">
+      </div>
+
+      <div class="form-field">
+        <label for="noticeDate">noticeDate:</label>
+        <input type="text" id="noticeDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('noticeDate')">Generar fecha</button>
+      </div>
+
+      <div class="form-field">
+        <label for="startDate">startDate:</label>
+        <input type="text" id="startDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('startDate')">Generar fecha</button>
+      </div>
+
+      <div class="form-field">
+        <label for="updateDescription">updateDescription:</label>
+        <textarea id="updateDescription"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="updateType">updateType:</label>
+        <select id="updateType">
+          <option value="update_addressable">update_addressable</option>
+          <option value="update_build">update_build</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="environment">environment:</label>
+        <select id="environment">
+          <option value="prod">prod</option>
+          <option value="dev">dev</option>
+          <option value="test">test</option>
+        </select>
+      </div>
+
+      <button onclick="submitForm()">Enviar</button>
+    </div>
   </div>
-  <div id="blog-manager">
-    <div id="cards-container"></div>
+
+  <div class="content" id="UpdateManager">
+    <h2>Update Manager</h2>
+    <ul class="update-list" id="updateList">
+      <!-- Aquí se mostrarán los formularios ingresados -->
+    </ul>
   </div>
-  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.4.3/firebase-database.js"></script>
+
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBwZYFB2Hv2iuiNBHdKMXX0boVhJFPEunk",
-	  authDomain: "editor-test-4c47e.firebaseapp.com",
-	  databaseURL: "https://editor-test-4c47e-default-rtdb.firebaseio.com",
-	  projectId: "editor-test-4c47e",
-	  storageBucket: "editor-test-4c47e.appspot.com",
-	  messagingSenderId: "465959812936",
-	  appId: "1:465959812936:web:4216ba3ad0af767882bd7d"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    
-    const database = firebase.database();
-    
-    function switchTab(tabId) {
-      const editorTab = document.getElementById('blog-editor');
-      const managerTab = document.getElementById('blog-manager');
-      const editorTabButton = document.querySelector('.tab:nth-child(1)');
-      const managerTabButton = document.querySelector('.tab:nth-child(2)');
-      
-      if (tabId === 'blog-editor') {
-        editorTab.style.display = 'block';
-        managerTab.style.display = 'none';
-        editorTabButton.classList.add('active');
-        managerTabButton.classList.remove('active');
-      } else if (tabId === 'blog-manager') {
-        editorTab.style.display = 'none';
-        managerTab.style.display = 'block';
-        editorTabButton.classList.remove('active');
-        managerTabButton.classList.add('active');
-        loadEntries();
+    // Cambia de pestaña activa
+    function changeTab(tabName) {
+      var tabs = document.getElementsByClassName('tab');
+      var contents = document.getElementsByClassName('content');
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+        contents[i].classList.remove('active');
       }
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
     }
-    
-    function loadEntries() {
-      const cardsContainer = document.getElementById('cards-container');
-      cardsContainer.innerHTML = '';
-      
-      database.ref('data').once('value', function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
-          const key = childSnapshot.key;
-          const childData = childSnapshot.val();
-          const card = createCard(key, childData);
-          cardsContainer.appendChild(card);
-        });
-      });
+
+    // Muestra el selector de fecha y hora en un popup
+    function showDatePicker(inputId) {
+      var currentDate = new Date();
+      var day = currentDate.getDate();
+      var month = currentDate.getMonth() + 1;
+      var year = currentDate.getFullYear();
+      var hours = currentDate.getHours();
+      var minutes = "00";
+      var seconds = "00";
+
+      var dateTimeString = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds;
+
+      document.getElementById(inputId).value = new Date(dateTimeString).getTime() / 1000;
     }
-    
-    function createCard(key, data) {
-      const card = document.createElement('div');
-      card.classList.add('card');
-      
-      const title = document.createElement('div');
-      title.classList.add('card-title');
-      title.innerText = data.title;
-      
-      const date = document.createElement('div');
-      date.classList.add('card-date');
-      date.innerText = formatDate(new Date());
-      
-      const buttons = document.createElement('div');
-      buttons.classList.add('card-buttons');
-      
-      const editButton = document.createElement('button');
-		editButton.innerText = 'Edit';
-		editButton.addEventListener('click', function() {
-		switchTab('blog-editor');
-		populateForm(key, data);
-	});
 
-  const deleteButton = document.createElement('button');
-  deleteButton.innerText = 'Delete';
-  deleteButton.addEventListener('click', function() {
-    deleteEntry(key);
-  });
-  
-  buttons.appendChild(editButton);
-  buttons.appendChild(deleteButton);
-  
-  card.appendChild(title);
-  card.appendChild(date);
-  card.appendChild(buttons);
-  
-  return card;
-}
+    // Envía el formulario
+    function submitForm() {
+      var form = {
+        createdDate: document.getElementById('createdDate').value,
+        endDate: document.getElementById('endDate').value,
+        id: document.getElementById('id').value,
+        lastModifiedDate: document.getElementById('lastModifiedDate').value,
+        newVersion: document.getElementById('newVersion').value,
+        noticeDate: document.getElementById('noticeDate').value,
+        startDate: document.getElementById('startDate').value,
+        updateDescription: document.getElementById('updateDescription').value,
+        updateType: document.getElementById('updateType').value,
+        environment: document.getElementById('environment').value
+      };
 
-function formatDate(date) {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
-}
+      // Aquí puedes procesar el objeto "form" o enviarlo a un servidor para su procesamiento
+      console.log(form);
 
-function populateForm(key, data) {
-  document.getElementById('title-input').value = data.title;
-  document.getElementById('content-input').innerHTML = data.content;
-  document.getElementById('image-input').value = data.image;
+      // Limpiar campos después del envío
+      document.getElementById('endDate').value = '';
+      document.getElementById('id').value = '';
+      document.getElementById('newVersion').value = '';
+      document.getElementById('noticeDate').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('updateDescription').value = '';
+      document.getElementById('updateType').value = '';
+      document.getElementById('environment').value = '';
 
-  const updateButton = document.createElement('button');
-  updateButton.textContent = 'Update';
-  updateButton.addEventListener('click', function() {
-    updateEntry(key);
-  });
-
-  const cancelButton = document.createElement('button');
-  cancelButton.textContent = 'Cancel';
-  cancelButton.addEventListener('click', function() {
-    switchTab('manager-tab');
-  });
-
-  const submitBtnContainer = document.querySelector('.submit-btn');
-  submitBtnContainer.innerHTML = '';
-
-  submitBtnContainer.appendChild(updateButton);
-  submitBtnContainer.appendChild(cancelButton);
-}
-
-function updateEntry(key) {
-  const title = document.getElementById('title-input').value;
-  const content = document.getElementById('content-input').innerHTML;
-  const image = document.getElementById('image-input').value;
-  
-  if (!title || !content || !image) {
-    alert('Please fill in all fields!');
-    return;
-  }
-  
-  const confirmSave = confirm('Are you sure you want to update this entry?');
-  
-  if (confirmSave) {
-    const updatedData = {
-      title: title,
-      content: content,
-      image: image
-    };
-    
-    database.ref('data/' + key).update(updatedData);
-    
-    clearForm();
-    switchTab('blog-manager');
-    
-    alert('Entry updated successfully!');
-  }
-}
-
-function deleteEntry(key) {
-  const confirmDelete = confirm('Are you sure you want to delete this entry?');
-
-  if (confirmDelete) {
-    database.ref('data/' + key).remove()
-      .then(() => {
-        alert('Entry deleted successfully!');
-        switchTab('manager-tab');
-        location.reload(); // Refresh the page
-      })
-      .catch(error => console.error('Error deleting entry:', error));
-  }
-}
-
-function saveData() {
-  const title = document.getElementById('title-input').value;
-  const content = document.getElementById('content-input').innerHTML;
-  const image = document.getElementById('image-input').value;
-  
-  if (!title || !content || !image) {
-    alert('Please fill in all fields!');
-    return;
-  }
-  
-  const confirmSave = confirm('Are you sure you want to save this data?');
-  
-  if (confirmSave) {
-    const newData = {
-      title: title,
-      content: content,
-      image: image
-    };
-    
-    database.ref('data').push(newData);
-    
-    clearForm();
-    
-    alert('Data saved successfully!');
-  }
-}
-
-function clearForm() {
-  document.getElementById('title-input').value = '';
-  document.getElementById('content-input').innerHTML = '';
-  document.getElementById('image-input').value = '';
-}
-
-function addBold() {
-  document.execCommand('bold', false, null);
-  updateContentDisplay();
-}
-
-function addItalic() {
-  document.execCommand('italic', false, null);
-  updateContentDisplay();
-}
-
-function addUnderline() {
-  document.execCommand('underline', false, null);
-  updateContentDisplay();
-}
-
-function updateContentDisplay() {
-  const contentInput = document.getElementById('content-input');
-  const contentDisplay = document.getElementById('content-display');
-  contentDisplay.innerHTML = contentInput.innerHTML;
-
-  // Remove strong tag from the content display
-  const strongTags = contentDisplay.getElementsByTagName('strong');
-  for (let i = 0; i < strongTags.length; i++) {
-    const strongTag = strongTags[i];
-    strongTag.outerHTML = strongTag.innerHTML;
-  }
-}
-
-switchTab('blog-editor');
+      // Agregar formulario a la lista en Update Manager
+      var updateList = document.getElementById('updateList');
+      var listItem = document.createElement('li');
+      listItem.className = 'update-list-item';
+      listItem.textContent = JSON.stringify(form);
+      updateList.appendChild(listItem);
+    }
   </script>
 </body>
 </html>
+
+
+
