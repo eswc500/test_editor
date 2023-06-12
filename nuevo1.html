@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <style>
+    /* Estilos para el dashboard */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background-color: #f2f2f2;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .tab.active {
+      background-color: #ccc;
+    }
+
+    .content {
+      display: none;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    .content.active {
+      display: block;
+    }
+
+    /* Estilos para el formulario */
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-field {
+      margin-bottom: 10px;
+    }
+
+    .form-field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-field input[type="text"],
+    .form-field textarea,
+    .form-field select {
+      width: 100%;
+      padding: 5px;
+    }
+
+    .form-field .popup-btn {
+      margin-left: 10px;
+    }
+
+    /* Estilos para Update Manager */
+    .update-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .update-list-item {
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tabs">
+    <div class="tab active" onclick="changeTab('Formulario')">Formulario</div>
+    <div class="tab" onclick="changeTab('UpdateManager')">Update Manager</div>
+  </div>
+
+  <div class="content active" id="Formulario">
+    <div class="form-container">
+      <div class="form-field">
+        <label for="createdDate">createdDate:</label>
+        <input type="text" id="createdDate" disabled>
+      </div>
+
+      <div class="form-field">
+        <label for="endDate">endDate:</label>
+        <input type="text" id="endDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('endDate')">Generar fecha</button>
+      </div>
+
+      <div class="form-field">
+        <label for="id">id:</label>
+        <input type="number" id="id">
+      </div>
+
+      <div class="form-field">
+        <label for="lastModifiedDate">lastModifiedDate:</label>
+        <input type="text" id="lastModifiedDate" disabled>
+      </div>
+
+      <div class="form-field">
+        <label for="newVersion">newVersion:</label>
+        <input type="text" id="newVersion">
+      </div>
+
+      <div class="form-field">
+        <label for="noticeDate">noticeDate:</label>
+        <input type="text" id="noticeDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('noticeDate')">Generar fecha</button>
+      </div>
+
+      <div class="form-field">
+        <label for="startDate">startDate:</label>
+        <input type="text" id="startDate" readonly>
+        <button class="popup-btn" onclick="showDatePicker('startDate')">Generar fecha</button>
+      </div>
+
+      <div class="form-field">
+        <label for="updateDescription">updateDescription:</label>
+        <textarea id="updateDescription"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="updateType">updateType:</label>
+        <select id="updateType">
+          <option value="update_addressable">update_addressable</option>
+          <option value="update_build">update_build</option>
+        </select>
+      </div>
+
+      <div class="form-field">
+        <label for="environment">environment:</label>
+        <select id="environment">
+          <option value="prod">prod</option>
+          <option value="dev">dev</option>
+          <option value="test">test</option>
+        </select>
+      </div>
+
+      <button onclick="submitForm()">Enviar</button>
+    </div>
+  </div>
+
+  <div class="content" id="UpdateManager">
+    <h2>Update Manager</h2>
+    <ul class="update-list" id="updateList">
+      <!-- Aquí se mostrarán los formularios ingresados -->
+    </ul>
+  </div>
+
+  <script>
+    // Cambia de pestaña activa
+    function changeTab(tabName) {
+      var tabs = document.getElementsByClassName('tab');
+      var contents = document.getElementsByClassName('content');
+      for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove('active');
+        contents[i].classList.remove('active');
+      }
+      document.getElementById(tabName).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Muestra el selector de fecha y hora en un popup
+    function showDatePicker(inputId) {
+      var currentDate = new Date();
+      var day = currentDate.getDate();
+      var month = currentDate.getMonth() + 1;
+      var year = currentDate.getFullYear();
+      var hours = currentDate.getHours();
+      var minutes = "00";
+      var seconds = "00";
+
+      var dateTimeString = year + "-" + month + "-" + day + "T" + hours + ":" + minutes + ":" + seconds;
+
+      document.getElementById(inputId).value = new Date(dateTimeString).getTime() / 1000;
+    }
+
+    // Envía el formulario
+    function submitForm() {
+      var form = {
+        createdDate: document.getElementById('createdDate').value,
+        endDate: document.getElementById('endDate').value,
+        id: document.getElementById('id').value,
+        lastModifiedDate: document.getElementById('lastModifiedDate').value,
+        newVersion: document.getElementById('newVersion').value,
+        noticeDate: document.getElementById('noticeDate').value,
+        startDate: document.getElementById('startDate').value,
+        updateDescription: document.getElementById('updateDescription').value,
+        updateType: document.getElementById('updateType').value,
+        environment: document.getElementById('environment').value
+      };
+
+      // Aquí puedes procesar el objeto "form" o enviarlo a un servidor para su procesamiento
+      console.log(form);
+
+      // Limpiar campos después del envío
+      document.getElementById('endDate').value = '';
+      document.getElementById('id').value = '';
+      document.getElementById('newVersion').value = '';
+      document.getElementById('noticeDate').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('updateDescription').value = '';
+      document.getElementById('updateType').value = '';
+      document.getElementById('environment').value = '';
+
+      // Agregar formulario a la lista en Update Manager
+      var updateList = document.getElementById('updateList');
+      var listItem = document.createElement('li');
+      listItem.className = 'update-list-item';
+      listItem.textContent = JSON.stringify(form);
+      updateList.appendChild(listItem);
+    }
+  </script>
+</body>
+</html>
