@@ -270,7 +270,7 @@ function populateForm(key, data) {
   const cancelButton = document.createElement('button');
   cancelButton.textContent = 'Cancel';
   cancelButton.addEventListener('click', function() {
-    switchTab('manager-tab');
+    switchTab('blog-manager');
   });
 
   const submitBtnContainer = document.querySelector('.submit-btn');
@@ -315,7 +315,7 @@ function deleteEntry(key) {
     database.ref('data/' + key).remove()
       .then(() => {
         alert('Entry deleted successfully!');
-        switchTab('manager-tab');
+        switchTab('blog-manager');
         location.reload(); // Refresh the page
       })
       .catch(error => console.error('Error deleting entry:', error));
@@ -372,15 +372,7 @@ function addUnderline() {
 
 function updateContentDisplay() {
   const contentInput = document.getElementById('content-input');
-  const contentDisplay = document.getElementById('content-display');
-  contentDisplay.innerHTML = contentInput.innerHTML;
-
-  // Remove strong tag from the content display
-  const strongTags = contentDisplay.getElementsByTagName('strong');
-  for (let i = 0; i < strongTags.length; i++) {
-    const strongTag = strongTags[i];
-    strongTag.outerHTML = strongTag.innerHTML;
-  }
+  contentInput.innerHTML = contentInput.innerHTML.replace(/<br>/g, '');
 }
 
 switchTab('blog-editor');
